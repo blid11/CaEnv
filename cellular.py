@@ -1,4 +1,5 @@
 #Environment for RL agent, compatible with Kenny Young's Mini Atar DQN
+# The environment is similar in complexity to Young's simplified SeaQuest environment
 
 import numpy as np
 from Simulation import Simulation
@@ -51,6 +52,10 @@ class Env:
         fire = False
 
         a = self.action_map[a]
+
+        # the agent will be forced to place a cell every 3 turns
+        # the agent can choose to move up, down, left, right, forward or it can stay in its current position
+        # the agent cannot move backwards
 
         if a == 'u':
             # up
@@ -110,7 +115,7 @@ class Env:
             zcopy = 4
 
         # need to make sure that we are not moving to a cell that has already been moved to
-        # if this occurs, negative reward and return to original position
+
         self.x = xcopy
         self.y = ycopy
         self.z = zcopy
@@ -202,11 +207,6 @@ class Env:
         self.simRewCalc.ca_beg_to_end(self.cellsToSimulate)
         self.gliderV = self.simRewCalc.getGliderV()
 
-        # print(len(self.cellsToSimulate))
-
-        # if len(self.cellsToSimulate) == 10:
-        #      self.simRewCalc.render()
-
         # this results in a cumulatively very negative reward, but the agent should try to optimize
         self.r = self.simRewCalc.getReward()
 
@@ -237,23 +237,7 @@ class Env:
             # self.signature_list.append(signature)
             self.signature_list[signature] = 1
 
-        #once the agent gets a 1 or a 2, it cannot receive a reward again
-
-        # if (self.num_pieces_placed > 7) and (self.r not in self.rewardList):
-        #     #to avoid farming, introduce a bonus for mixing it up
-        #     self.rewardList.append(self.r)
-        #     self.r = self.r + 3
-
-        # if self.r in self.rewardList:
-        #     self.r = 0
-        #     #to avoid farming, introduce a bonus for mixing it up
-        # else:
-        #     self.rewardList.append(self.r)
-
         self.total_score += self.simRewCalc.getReward()
-
-        # if self.num_pieces_placed % 3 == 0:
-        #     self.printEpReward()
 
     def get_total_score(self):
         return self.total_score
