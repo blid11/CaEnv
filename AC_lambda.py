@@ -28,10 +28,17 @@ import numpy, argparse, logging, os
 from collections import namedtuple
 from environment import Environment
 
+# using tensorboard writer to track training progress
+
 writer = SummaryWriter("ACData")
 
-# cd PycharmProjects\TimedAC  tensorboard --logdir ACData
-
+# in order to view the Tensorboard UI, I first opened the Anaconda environment where
+# the python interpreter for my project and where my installed version of tensorboard were
+# located. I then went into the directory where my project was located using (for example):
+# cd PycharmProjects\TimedAC
+# and I then ran the command
+# tensorboard --logdir ACData
+# in order to get the link to Tensorboard, which I opened in Chrome
 
 #####################################################################################################################
 # Constants
@@ -50,9 +57,13 @@ dSiLU = lambda x: torch.sigmoid(x)*(1+x*(1-torch.sigmoid(x)))
 SiLU = lambda x: x*torch.sigmoid(x)
 
 # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# I set the device for Pytorch to use as my CPU, and set the number of threads to use as 6
+# here I will set it to 1, however one can change this value.
+
 device = torch.device("cpu")
 
-torch.set_num_threads(6)
+torch.set_num_threads(1)
 
 #####################################################################################################################
 # ACNetwork
@@ -359,6 +370,7 @@ def main():
     # directory with the game's name.
     if args.output:
         file_name = args.output
+    # modification from original code so that it uses the cellular environment
     else:
         file_name = os.getcwd() + "/" + "cellular"
 
